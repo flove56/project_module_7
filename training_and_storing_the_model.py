@@ -11,27 +11,33 @@ from keras import models, layers, losses
 import cv2
 import seaborn as sns
 
-mode = 'mnist'  # mnist or patch
+#mode = 'mnist'  # mnist or patch
 
-if mode == 'mnist':
-    X_mnist, y_mnist = fetch_openml("mnist_784", version=1, return_X_y=True, as_frame=False, parser='auto')
+#if mode == 'mnist':
+#    X_mnist, y_mnist = fetch_openml("mnist_784", version=1, return_X_y=True, as_frame=False, parser='auto')
 
-    y_mnist = np.array(y_mnist, dtype=int)
-    dim_row = 28
-    dim_col = 28
+#    y_mnist = np.array(y_mnist, dtype=int)
+#    dim_row = 28
+#    dim_col = 28
 
     # unflatten mnist images
-    X_mnist = np.array([np.reshape(xf, (dim_row, dim_col)) for xf in X_mnist])
-    iters = 2
-else:
-    dim_row = 27
-    dim_col = 19
-    iters = 500
+#    X_mnist = np.array([np.reshape(xf, (dim_row, dim_col)) for xf in X_mnist])
+#    iters = 2
+#else:
+dim_row = 27
+dim_col = 19
+iters = 500
 
-with open(f"{os.path.dirname(os.path.realpath(__file__))}/all_drawings.json", 'r') as file:
+with open(f"{os.path.dirname(os.path.realpath(__file__))}/gestures.json", 'r') as file:
     data = json.load(file)
-X_tsp = np.array([d[0] for d in data])
-y_tsp = np.array([int(d[1]) for d in data])
+#the frames
+X_data = np.array([d["frame"] for d in data])
+#the labels
+#dictkey = {'t': "petting", 'k': "poking", 'c': "comforting", 'h': "hitting", 's': "scratching"}
+dictkey = {'petting': 1, 'poking': 2, 'comforting': 3, 'hitting': 4, 'scratching': 5}
+y_data = np.array([dictkey[d["label"]] for d in data])
+print(y_data)
+
 
 
 def plot_digits(X, y):
@@ -45,10 +51,10 @@ def plot_digits(X, y):
     plt.show()
 
 
-if mode == 'mnist':
-    X_train, X_test, y_train, y_test = train_test_split(X_mnist, y_mnist, test_size=0.25)
-else:
-    X_train, X_test, y_train, y_test = train_test_split(X_tsp, y_tsp, test_size=0.25)
+#if mode == 'mnist':
+#    X_train, X_test, y_train, y_test = train_test_split(X_mnist, y_mnist, test_size=0.25)
+#else:
+X_train, X_test, y_train, y_test = train_test_split(X_data, y_data, test_size=0.25)
 
 model = models.Sequential()
 model.add(layers.Conv2D(64, (3, 3), activation='relu', input_shape=(dim_row, dim_col, 1)))

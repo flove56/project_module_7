@@ -6,9 +6,6 @@ name = "pypi"
 [packages]
 numpy = "*"
 pyserial = "*"
-pygame = "*"
-image = "*"
-opencv-python = "*"
 
 [dev-packages]
 
