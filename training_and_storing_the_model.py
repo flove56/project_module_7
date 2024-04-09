@@ -15,7 +15,7 @@ from joblib import dump, load
 
 dim_row = 27
 dim_col = 19
-iters = 500
+iters = 10
 
 with open(f"{os.path.dirname(os.path.realpath(__file__))}/gestures.json", 'r') as file:
     data = json.load(file)
@@ -65,7 +65,7 @@ plt.ylim([0, 1])
 plt.legend(loc='lower right')
 plt.show()
 
-def modelSaving(model: DummyClassifier, model_name: str = 'model') -> str:
+def modelSaving(model_name: str = 'model_test') -> str:
     """
     Save the trained scikit-learn model using joblib.
 
@@ -82,10 +82,11 @@ def modelSaving(model: DummyClassifier, model_name: str = 'model') -> str:
         The filename under which the model is saved.
     """
     filename = f"{model_name}.joblib"
-    dump(model, filename=filename)
+    dump(hist, filename=filename)
     print(f"ML Model {model_name} was saved as '{filename}'.")
     #return filename
-modelSaving(hist, "model")
+
+modelSaving()
 
 y_pred = model.predict(X_test)
 print(y_pred)

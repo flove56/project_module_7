@@ -6,6 +6,10 @@ name = "pypi"
 [packages]
 numpy = "*"
 pyserial = "*"
+scikit-learn = "*"
+matplotlib = "*"
+tensorflow = "*"
+seaborn = "*"
 
 [dev-packages]
 
