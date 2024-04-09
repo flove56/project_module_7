@@ -1,4 +1,5 @@
 from sklearn.datasets import fetch_openml
+from sklearn.dummy import DummyClassifier
 from sklearn.metrics import confusion_matrix
 from sklearn.model_selection import train_test_split
 from sklearn import metrics
@@ -10,20 +11,8 @@ import tensorflow as tf
 from keras import models, layers, losses
 import cv2
 import seaborn as sns
+from joblib import dump, load
 
-#mode = 'mnist'  # mnist or patch
-
-#if mode == 'mnist':
-#    X_mnist, y_mnist = fetch_openml("mnist_784", version=1, return_X_y=True, as_frame=False, parser='auto')
-
-#    y_mnist = np.array(y_mnist, dtype=int)
-#    dim_row = 28
-#    dim_col = 28
-
-    # unflatten mnist images
-#    X_mnist = np.array([np.reshape(xf, (dim_row, dim_col)) for xf in X_mnist])
-#    iters = 2
-#else:
 dim_row = 27
 dim_col = 19
 iters = 500
@@ -51,9 +40,6 @@ def plot_digits(X, y):
     plt.show()
 
 
-#if mode == 'mnist':
-#    X_train, X_test, y_train, y_test = train_test_split(X_mnist, y_mnist, test_size=0.25)
-#else:
 X_train, X_test, y_train, y_test = train_test_split(X_data, y_data, test_size=0.25)
 
 model = models.Sequential()
@@ -78,6 +64,28 @@ plt.ylabel('Accuracy')
 plt.ylim([0, 1])
 plt.legend(loc='lower right')
 plt.show()
+
+def modelSaving(model: DummyClassifier, model_name: str = 'model') -> str:
+    """
+    Save the trained scikit-learn model using joblib.
+
+    Parameters
+    ----------
+    model : DummyClassifier
+        The trained scikit-learn model to be saved. Defaults as a DummyClassifier
+    model_name : str
+        The name to be used for the saved model file. Defaults to 'model', which will lead to the file 'model.joblib'
+
+    Returns
+    -------
+    str
+        The filename under which the model is saved.
+    """
+    filename = f"{model_name}.joblib"
+    dump(model, filename=filename)
+    print(f"ML Model {model_name} was saved as '{filename}'.")
+    #return filename
+modelSaving(hist, "model")
 
 y_pred = model.predict(X_test)
 print(y_pred)
