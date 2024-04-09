@@ -29,6 +29,6 @@ class The_pet:
             clock.tick(60)
 
     def display(self):
-        self.screen.fill((144, 238, 144))
+        self.screen.fill((175, 203, 173))
 
         self.body.display(self.screen)
