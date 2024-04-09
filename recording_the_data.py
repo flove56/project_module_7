@@ -21,7 +21,7 @@ last_img = TSP.readFrame()
 while True:
     data = {
         "time": int,
-        "label": int,
+        "label": '',
         "sep": separation,
         "frame": []
     }
@@ -55,7 +55,7 @@ while True:
     # Stop the program when q is pressed
     if key == 'q':
         # the json file is opened and the data is put into the file
-        with open('gestures.json', 'w') as json_file:
+        with open('gesturesfemke.json', 'w') as json_file:
             json.dump(all_data, json_file, indent=4)
         quit()
 
