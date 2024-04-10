@@ -1,5 +1,8 @@
+import stages_pet
 from body import Body
 import pygame
+import stages_pet
+
 
 class The_pet:
     def __init__(self):
@@ -31,4 +34,6 @@ class The_pet:
     def display(self):
         self.screen.fill((175, 203, 173))
 
-        self.body.display(self.screen)
+        move_list = stages_pet.stage('scr')
+        self.body.update(move_list)
+        self.body.display_all(self.screen)
