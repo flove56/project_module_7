@@ -8,7 +8,7 @@ from TSPDecoder import *
 
 # Compare the input key with numbers
 #keys = ['t', 'k', 'c', 'h', 's']
-dictkey = {'t': "petting", 'k': "poking", 'c': "comforting", 'h': "hitting", 's': "scratching"}
+dictkey = {'r': "regular", 't': "petting", 'k': "poking", 'c': "comforting", 'h': "hitting", 's': "scratching"}
 
 rows, columns = 27, 19
 TSP = TSPDecoder(port = "COM10", rows=rows, columns=columns)
@@ -29,7 +29,7 @@ while True:
     img = TSP.readFrame()
     #################################################################################np.maximum???
     # Add a threshold to the pixels
-    ret, thresed_img = cv2.threshold(img, 50, 255, cv2.THRESH_TOZERO)
+    ret, thresed_img = cv2.threshold(img, 30, 255, cv2.THRESH_TOZERO)
     # Add the previous frame over the thresed_img
     #thresed_img = cv2.add(thresed_img, last_img)
 
@@ -55,7 +55,7 @@ while True:
     # Stop the program when q is pressed
     if key == 'q':
         # the json file is opened and the data is put into the file
-        with open('json_files/gesturesperson1.json', 'w') as json_file:
+        with open('json_files/gesturesregular.json', 'w') as json_file:
             json.dump(all_data, json_file, indent=4)
         quit()
 
