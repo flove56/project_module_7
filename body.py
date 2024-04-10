@@ -1,14 +1,20 @@
 import pygame
 import math
+from tail import Tail
 
 
 class Body:
     def __init__(self, _size):
+        self.screen = None
+
+        # set sizes
         self.size = _size
         self.x = self.size[0]
         self.drawing_x = self.x / 8
         self.y = self.size[1]
         self.drawing_y = self.y / 8
+
+        # define colors
         self.fur_color = (248, 200, 135)  # Light brown
         self.eye_color = (237, 237, 0)  # (212, 235, 242)  # Light blue # dark yellow (237, 237, 0)
         # light yellow (255, 255, 161)
@@ -19,16 +25,16 @@ class Body:
         self.leg_color = (50, 10, 0)  # Dark Brown
         self.feet_color = (100, 50, 10)
 
+        # import pictures
         self.left_ear = pygame.image.load("pictures/left ear.png")
         self.right_ear = pygame.image.load("pictures/right ear.png")
         self.leg = pygame.image.load("pictures/leg.png")
 
-        self.segment_mass = 10
-        self.segment_spring_constant = 10
-        self.segment_friction = 0.1
-        self.segment_force = 0
+        self.tail = Tail((self.x / 2, self.y / 2 + self.drawing_y * 0.55),
+                         self.x, self.y,
+                         self.drawing_x, self.drawing_y)
 
-    def display(self, _screen):
+    def display_all(self, _screen):
         self.screen = _screen
 
         self.display_body()
@@ -37,7 +43,13 @@ class Body:
         self.display_mouth()
         self.display_nose()
         self.display_legs()
-        self.display_tail()
+        self.tail.display_tail(self.screen)
+
+    def update(self, move_list):
+        self.update_ears(move_list[0])
+        self.update_eyes(move_list[1], move_list[2])
+        self.tail.update_tail(move_list[3], move_list[4], move_list[5], move_list[6])
+        self.update_mouth(move_list[7])
 
     def display_body(self):
         rect_main_body = [self.x / 2 - (self.drawing_x * 1.5) / 2,
@@ -73,6 +85,9 @@ class Body:
         position_left = (self.x / 2 + self.drawing_x * 0.12,
                          self.y / 2 - self.drawing_y * 2.15)
         self.screen.blit(right_ear_rot, position_left)
+
+    def update_ears(self, angle_):
+        self.angle_ears = angle_
 
     def display_eyes(self):
         # this changes how big the eyes are, is smaller, then eyes bigger
@@ -123,6 +138,10 @@ class Body:
                        self.drawing_y / (big * 2.5))
         pygame.draw.ellipse(self.screen, self.pupil_color, right_pupil)
 
+    def update_eyes(self, eyes_scale_, eyes_angle_):
+        self.eyes_scale = eyes_scale_
+        self.eyes_angle = eyes_angle_
+
     def display_mouth(self):
         mouth_left = (self.x / 2 - self.drawing_x / 11,
                       self.y / 2 - self.drawing_y * 1.1,
@@ -135,6 +154,9 @@ class Body:
                        self.drawing_x / 8,
                        self.drawing_y / 4)
         pygame.draw.arc(self.screen, self.mouth_color, mouth_right, 3.14, 4.71)
+
+    def update_mouth(self, mouth_pos_):
+        self.mouth_pos = mouth_pos_
 
     def display_nose(self):
         top_nose = (self.x / 2 - (self.drawing_x / 12),
@@ -196,27 +218,3 @@ class Body:
                             self.drawing_y * 0.3)
         pygame.draw.ellipse(self.screen, self.leg_color, right_front_foot)
 
-    def display_tail(self):
-        for segment in range (0,4):
-            self.tail_segment_display(30, segment)
-
-    def tail_segment_display(self, angle, seg_number):
-        start_seg = (self.x/2 + self.drawing_x * 0.6 + seg_number,
-                     self.y/2 + self.drawing_y * 0.8 + seg_number)
-        seg_len = self.drawing_y
-        x = start_seg[0] + math.cos(math.radians(angle)) * seg_len
-        y = start_seg[1] + math.sin(math.radians(angle)) * seg_len
-
-        pygame.draw.line(self.screen, self.feet_color, start_seg, (x, y), 10)
-
-        """
-        # Set the velocity by adding the force divided by the mass to it
-        segment_velocity += (self.segment_force / self.segment_mass)
-        # The previous angle gets the value of angle
-        previous_angle = angle
-        # The value of angle gets the velocity added
-        angle += segment_velocity
-        # the force is updated with the angle
-        self.segment_force = -(angle / self.segment_spring_constant + self.segment_friction * segment_velocity)
-        # The drawing angle is calculated by the difference of previous angle and angle
-        drawing_angle = previous_angle - angle"""
