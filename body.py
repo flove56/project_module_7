@@ -1,5 +1,4 @@
 import pygame
-import math
 from tail import Tail
 
 
@@ -26,9 +25,13 @@ class Body:
         self.feet_color = (100, 50, 10)
 
         # import pictures
-        self.left_ear = pygame.image.load("pictures/left ear.png")
-        self.right_ear = pygame.image.load("pictures/right ear.png")
-        self.leg = pygame.image.load("pictures/leg.png")
+        left_ear_img = pygame.image.load("pictures/left ear.png")
+        right_ear_img = pygame.image.load("pictures/right ear.png")
+        picture_size = (self.drawing_x * 0.6, self.drawing_y * 0.6)
+        self.left_ear = pygame.transform.scale(left_ear_img, picture_size)
+        self.right_ear = pygame.transform.scale(right_ear_img, picture_size)
+        leg = pygame.image.load("pictures/leg.png")
+        self.resized_leg = pygame.transform.scale(leg, (self.drawing_x * 0.3, self.drawing_y * 1.7))
 
         self.tail = Tail((self.x / 2, self.y / 2 + self.drawing_y * 0.55),
                          self.x, self.y,
@@ -37,13 +40,13 @@ class Body:
     def display_all(self, _screen):
         self.screen = _screen
 
+        self.tail.display_tail(self.screen)
         self.display_body()
         self.display_ears()
         self.display_eyes()
         self.display_mouth()
         self.display_nose()
         self.display_legs()
-        self.tail.display_tail(self.screen)
 
     def update(self, move_list):
         self.update_ears(move_list[0])
@@ -69,21 +72,14 @@ class Body:
         pygame.draw.ellipse(self.screen, self.fur_color, rect_head)
 
     def display_ears(self):
-        """
-        first have the rotation of left ears
-        happy/normal = 18
-        then the right ears
-        happy/normal = 341
-        :return: displays ears
-        """
-        left_ear_rot = pygame.transform.rotate(self.left_ear, 18)
-        position_left = (self.x / 2 - self.drawing_x * 0.9,
-                         self.y / 2 - self.drawing_y * 2.15)
+        left_ear_rot = pygame.transform.rotate(self.left_ear, self.angle_ears)
+        position_left = (self.x / 2 - self.drawing_x * 0.8,
+                         self.y / 2 - self.drawing_y * 2.1)
         self.screen.blit(left_ear_rot, position_left)
 
-        right_ear_rot = pygame.transform.rotate(self.right_ear, 341)
-        position_left = (self.x / 2 + self.drawing_x * 0.12,
-                         self.y / 2 - self.drawing_y * 2.15)
+        right_ear_rot = pygame.transform.rotate(self.right_ear, int(360-self.angle_ears-1))
+        position_left = (self.x / 2 + self.drawing_x * 0.1,
+                         self.y / 2 - self.drawing_y * 2.11)
         self.screen.blit(right_ear_rot, position_left)
 
     def update_ears(self, angle_):
@@ -201,9 +197,8 @@ class Body:
                           self.y / 2 - self.drawing_y * 0.5)
         position_left = (self.x / 2 - self.drawing_x * 0.5,
                          self.y / 2 - self.drawing_y * 0.5)
-        resized_leg = pygame.transform.scale(self.leg, (self.drawing_x * 0.3, self.drawing_y * 1.7))
-        self.screen.blit(resized_leg, position_right)
-        self.screen.blit(resized_leg, position_left)
+        self.screen.blit(self.resized_leg, position_right)
+        self.screen.blit(self.resized_leg, position_left)
 
         # Feet in the front
         left_front_foot = (self.x / 2 - self.drawing_x * 0.56,
@@ -217,4 +212,3 @@ class Body:
                             self.drawing_x * 0.4,
                             self.drawing_y * 0.3)
         pygame.draw.ellipse(self.screen, self.leg_color, right_front_foot)
-

@@ -1,7 +1,7 @@
 # Set the parameters for the different ears positions
-ears_low = 10
-ears_mid = 40
-ears_high = 80
+ears_low = 8
+ears_mid = 15
+ears_high = 35
 
 # Set the parameters for the different eyes stages
 eyes_reg = 1
@@ -12,13 +12,13 @@ eyes_angle_nor = 10
 eyes_angle_not = 0
 
 # Set the parameters for the different tail movements
-tail_width_normal = 1
-tail_width_sad = 3
+tail_width_normal = 2
+tail_width_sad = 5
 tail_movement_slow = 0.01
-tail_movement_fast = 0.07
+tail_movement_fast = 0.04
 tail_movement_not = 0
-tail_max_scale_reg = 1
-tail_max_scale_big = 2
+tail_max_scale_reg = 0.5
+tail_max_scale_big = 1
 tail_end_nor = 'high'
 tail_end_low = 'low'
 
@@ -29,9 +29,8 @@ mouth_sad = 1
 
 def stage(phase):
     """
-
     :param phase: give a string of the different phases with the three first letters
-    :return: a list in the order: 0:ears_angle, 1:eyes_scale, 2:eyes_angle, 3:tail_movement, 4: tail_max_scale
+    :return: a list in the order: 0:ears_angle, 1:eyes_scale, 2:ears_angle, 3:tail_movement, 4: tail_max_scale
     5:tail_width, 6: tail_end, 7:mouth_pos
     """
     move_list = []

@@ -5,6 +5,8 @@ https://www.pygame.org/wiki/BezierCurve
 2007 Victor Blomqvist
 Released to the Public Domain
 """
+import random
+
 import pygame
 
 gray = (100, 100, 100)
@@ -93,6 +95,9 @@ class Tail:
         self.tail_scale = 0
         self.tail_speed = 0
         self.tail_width = 0
+        self.tail_end_movement = 0.3
+
+        self.amount_of_hair = 20
 
     def display_tail(self, screen_):
         self.screen = screen_
@@ -109,11 +114,21 @@ class Tail:
         # Draw control "lines"
         pygame.draw.lines(self.screen, lightgray, False, [(x[0], x[1]) for x in control_points])
         """
-
-        # Draw bezier curve
-        b_points = compute_bezier_points([(x[0], x[1]) for x in control_points])
-        pygame.draw.lines(self.screen, pygame.Color("red"), False, b_points, self.tail_width)
-
+        fur_color = [248, 200, 135]  # Light brown
+        leg_color = [50, 10, 0]  # Dark Brown
+        steps = [(fur_color[0] - leg_color[0])/(self.amount_of_hair + 1),
+                 (fur_color[1] - leg_color[1])/(self.amount_of_hair + 1),
+                 (fur_color[2] - leg_color[2])/(self.amount_of_hair + 1)]
+        for i in range(0, self.amount_of_hair):
+            # Draw bezier curve
+            for l in range(1, 3):
+                for m in range(1, 2):
+                    control_points[l][m] += self.drawing_y * 0.015 * l
+            b_points = compute_bezier_points([(x[0], x[1]) for x in control_points])
+            r = fur_color[0] - int(steps[0] * i)
+            g = fur_color[1] - int(steps[1] * i)
+            b = fur_color[2] - int(steps[2] * i)
+            pygame.draw.lines(self.screen, (r, g, b), False, b_points, self.tail_width)
 
     def update_tail(self, tail_speed_, tail_width_, max_scale_, end_indication_):
         if self.tail_width is not tail_width_:
@@ -131,17 +146,16 @@ class Tail:
 
         if end_indication == 'low':
             self.end_point = (self.x / 2 + self.drawing_x * 1.8,
-                              self.y / 2 + self.drawing_y * 0.4)
-            self.left_mid_point = (self.x/2 + self.drawing_x * 0.9,
-                                   self.y/2 + self.drawing_y * 0.4 + self.drawing_y * self.tail_scale)
-            self.right_mid_point = (self.x / 2 + self.drawing_x * 0.9,
-                                    self.y / 2 + self.drawing_y * 0.4 - self.drawing_y * self.tail_scale)
+                              self.y / 2 + self.drawing_y * 0.4 - self.drawing_y * self.tail_end_movement * self.tail_scale)
+            self.left_mid_point = [self.x / 2 + self.drawing_x * 1,
+                                   self.y / 2 + self.drawing_y * 0.4 + self.drawing_y * self.tail_scale]
+            self.right_mid_point = [self.x / 2 + self.drawing_x * 0.9,
+                                    self.y / 2 + self.drawing_y * 0.4 - self.drawing_y * self.tail_scale]
 
         if end_indication == 'high':
             self.end_point = (self.x / 2 + self.drawing_x * 1.6,
-                              self.y / 2 - self.drawing_y * 0.4 - self.drawing_y * 0.1 * self.tail_scale)
-            self.left_mid_point = (self.x / 2 + self.drawing_x * 0.9,
-                                   self.y / 2 + self.drawing_y * 0.4 + self.drawing_y * self.tail_scale)
-            self.right_mid_point = (self.x / 2 + self.drawing_x * 0.9,
-                                    self.y / 2 + self.drawing_y * 0.4 - self.drawing_y * self.tail_scale)
-
+                              self.y / 2 - self.drawing_y * 0.4 - self.drawing_y * self.tail_end_movement * self.tail_scale)
+            self.left_mid_point = [self.x / 2 + self.drawing_x * 0.8,
+                                   self.y / 2 + self.drawing_y * 0.6 + self.drawing_y * self.tail_scale]
+            self.right_mid_point = [self.x / 2 + self.drawing_x * 0.8,
+                                    self.y / 2 + self.drawing_y * 0.2 - self.drawing_y * self.tail_scale]
