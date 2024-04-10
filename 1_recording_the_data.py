@@ -55,7 +55,7 @@ while True:
     # Stop the program when q is pressed
     if key == 'q':
         # the json file is opened and the data is put into the file
-        with open('json_files/gesturesperson15.json', 'w') as json_file:
+        with open('json_files/gesturesperson16.json', 'w') as json_file:
             json.dump(all_data, json_file, indent=4)
         quit()
 
