@@ -1,3 +1,9 @@
 pygame~=2.5.2
 numpy~=1.26.4
 pyserial~=3.5
+matplotlib~=3.8.4
+opencv-python~=4.9.0.80
+scikit-learn~=1.4.1.post1
+keras~=3.2.0
+tensorflow~=2.16.1
+seaborn~=0.13.2

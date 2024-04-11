@@ -1,4 +1,5 @@
 #! /usr/bin/python3
+#! /usr/bin/python3
 import json
 import os
 from TSPDecoder import *
@@ -19,8 +20,8 @@ class real_time_reading:
 
     model = load_model('MO_B16_781_761_1-14WOH.h5')
 
-    TSP = TSPDecoder(port="COM10", rows=dim_row, columns=dim_col)
-
+    # TSP = TSPDecoder(port="COM10", rows=dim_row, columns=dim_col)  # Femke's working line
+    TSP = TSPDecoder(rows=dim_row, columns=dim_col)  # Maja's working line
     def the_lot_of_readings(self):
 
         ###def __init__(self)
@@ -49,7 +50,7 @@ class real_time_reading:
         data = []
         type = {0: 'reg', 1: 'pet', 2: 'pok', 3: 'com', 4: 'scr'}
         amount_type = {'reg': 0, 'pet': 0, 'pok': 0, 'com': 0, 'scr': 0}
-        for i in range(40):
+        for i in range(20):
             #print(self.the_lot_of_readings().dtype)
             data.append(type[self.the_lot_of_readings()])
         np.array(data)

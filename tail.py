@@ -92,15 +92,29 @@ class Tail:
         self.left_mid_point = None
         self.right_mid_point = None
 
-        self.tail_scale = 0
-        self.tail_speed = 0
-        self.tail_width = 0
+        self.tail_scale = 0.2
+        self.tail_speed = 0.01
+        self.tail_width = 1
         self.tail_end_movement = 0.3
+        self.change_state = False
+        self.max_scale = 0
+        self.end_indication = None
+
+        self.wanted_scalers = [1.8, 0.4, 1.0, 0.9]
+        self.scalers_now = [1.6, -0.4, 0.8, 0.8]  # end_x, end_y, left_x, right_x
 
         self.amount_of_hair = 20
 
     def display_tail(self, screen_):
         self.screen = screen_
+
+        self.end_point = (self.x / 2 + self.drawing_x * self.scalers_now[0],
+                          self.y / 2 - self.drawing_y * self.scalers_now[1] -
+                          self.drawing_y * self.tail_end_movement * self.tail_scale)
+        self.left_mid_point = [self.x / 2 + self.drawing_x * self.scalers_now[2],
+                               self.y / 2 + self.drawing_y * 0.4 + self.drawing_y * self.tail_scale]
+        self.right_mid_point = [self.x / 2 + self.drawing_x * self.scalers_now[3],
+                                self.y / 2 + self.drawing_y * 0 - self.drawing_y * self.tail_scale]
 
         # Control points that are later used to calculate the curve
         control_points = [self.start_point, self.left_mid_point, self.right_mid_point, self.end_point]
@@ -109,53 +123,60 @@ class Tail:
         # Draw control points
         for p in control_points:
             pygame.draw.circle(self.screen, blue, (int(p[0]), int(p[1])), 4)
-
         
         # Draw control "lines"
         pygame.draw.lines(self.screen, lightgray, False, [(x[0], x[1]) for x in control_points])
         """
         fur_color = [248, 200, 135]  # Light brown
         leg_color = [50, 10, 0]  # Dark Brown
-        steps = [(fur_color[0] - leg_color[0])/(self.amount_of_hair + 1),
-                 (fur_color[1] - leg_color[1])/(self.amount_of_hair + 1),
-                 (fur_color[2] - leg_color[2])/(self.amount_of_hair + 1)]
+        steps = [(fur_color[0] - leg_color[0]) / (self.amount_of_hair + 1),
+                 (fur_color[1] - leg_color[1]) / (self.amount_of_hair + 1),
+                 (fur_color[2] - leg_color[2]) / (self.amount_of_hair + 1)]
         for i in range(0, self.amount_of_hair):
             # Draw bezier curve
             for l in range(1, 3):
                 for m in range(1, 2):
                     control_points[l][m] += self.drawing_y * 0.015 * l
             b_points = compute_bezier_points([(x[0], x[1]) for x in control_points])
+            # creating a gradiant in color between the strands of hair
             r = fur_color[0] - int(steps[0] * i)
             g = fur_color[1] - int(steps[1] * i)
             b = fur_color[2] - int(steps[2] * i)
             pygame.draw.lines(self.screen, (r, g, b), False, b_points, self.tail_width)
 
-    def update_tail(self, tail_stages):
-        if self.tail_width is not tail_stages['width']:
+    def update_tail(self, tail_stages, change_state_):
+        if change_state_:
+            self.old_max_scale = self.max_scale
             self.tail_speed = tail_stages['speed']
-        max_scale = tail_stages['max_scale']
+            self.change_state = change_state_
+        self.max_scale = tail_stages['max_scale']
 
         self.tail_width = tail_stages['width']
-        end_indication = tail_stages['end_point']
+        self.end_indication = tail_stages['end_point']
 
-        if self.tail_scale >= max_scale:
-            self.tail_speed = -self.tail_speed
-        if self.tail_scale <= -max_scale:
-            self.tail_speed = -self.tail_speed
-        self.tail_scale += self.tail_speed
+        if self.change_state:
+            if self.tail_scale >= self.max_scale:
+                self.tail_speed = -tail_stages['speed']
+            if self.tail_scale <= -self.max_scale:
+                self.tail_speed = tail_stages['speed']
+            self.tail_scale += self.tail_speed
+            if self.tail_scale <= self.max_scale and self.tail_scale >= -self.max_scale:
+                self.change_state = False
+        else:
+            if self.tail_scale >= self.max_scale:
+                self.tail_speed = -self.tail_speed
+            if self.tail_scale <= -self.max_scale:
+                self.tail_speed = -self.tail_speed
+            self.tail_scale += self.tail_speed
 
-        if end_indication == 'low':
-            self.end_point = (self.x / 2 + self.drawing_x * 1.8,
-                              self.y / 2 + self.drawing_y * 0.4 - self.drawing_y * self.tail_end_movement * self.tail_scale)
-            self.left_mid_point = [self.x / 2 + self.drawing_x * 1,
-                                   self.y / 2 + self.drawing_y * 0.4 + self.drawing_y * self.tail_scale]
-            self.right_mid_point = [self.x / 2 + self.drawing_x * 0.9,
-                                    self.y / 2 + self.drawing_y * 0.4 - self.drawing_y * self.tail_scale]
+        if self.end_indication == 'low':
+            self.wanted_scalers = [1.6, -0.4, 0.8, 0.8]
+        if self.end_indication == 'high':
+            self.wanted_scalers = [1.8, 0.4, 1.0, 0.9]
 
-        if end_indication == 'high':
-            self.end_point = (self.x / 2 + self.drawing_x * 1.6,
-                              self.y / 2 - self.drawing_y * 0.4 - self.drawing_y * self.tail_end_movement * self.tail_scale)
-            self.left_mid_point = [self.x / 2 + self.drawing_x * 0.8,
-                                   self.y / 2 + self.drawing_y * 0.6 + self.drawing_y * self.tail_scale]
-            self.right_mid_point = [self.x / 2 + self.drawing_x * 0.8,
-                                    self.y / 2 + self.drawing_y * 0.2 - self.drawing_y * self.tail_scale]
+        for scaler in range(len(self.wanted_scalers)):
+            if self.scalers_now[scaler] > self.wanted_scalers[scaler]:
+                self.scalers_now[scaler] -= 0.01
+            if self.scalers_now[scaler] < self.wanted_scalers[scaler]:
+                self.scalers_now[scaler] += 0.01
+

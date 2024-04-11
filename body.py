@@ -43,7 +43,7 @@ class Body:
 
     def update(self, move_list):
         self.eyes_ears.update(move_list[0], move_list[1])
-        self.tail.update_tail(move_list[2])
+        self.tail.update_tail(move_list[2], move_list[4])
         self.update_mouth(move_list[3])
 
     def display_body(self):
