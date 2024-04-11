@@ -130,13 +130,13 @@ class Tail:
             b = fur_color[2] - int(steps[2] * i)
             pygame.draw.lines(self.screen, (r, g, b), False, b_points, self.tail_width)
 
-    def update_tail(self, tail_speed_, tail_width_, max_scale_, end_indication_):
-        if self.tail_width is not tail_width_:
-            self.tail_speed = tail_speed_
-        max_scale = max_scale_
+    def update_tail(self, tail_stages):
+        if self.tail_width is not tail_stages['width']:
+            self.tail_speed = tail_stages['speed']
+        max_scale = tail_stages['max_scale']
 
-        self.tail_width = tail_width_
-        end_indication = end_indication_
+        self.tail_width = tail_stages['width']
+        end_indication = tail_stages['end_point']
 
         if self.tail_scale >= max_scale:
             self.tail_speed = -self.tail_speed

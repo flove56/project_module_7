@@ -34,6 +34,6 @@ class The_pet:
     def display(self):
         self.screen.fill((175, 203, 173))
 
-        move_list = stages_pet.stage('com')
+        move_list = stages_pet.stage('scr')
         self.body.update(move_list)
         self.body.display_all(self.screen)
