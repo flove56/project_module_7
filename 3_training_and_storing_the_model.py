@@ -50,6 +50,7 @@ X_val, y_val = drop_remain(X_val, y_val)
 #newmodel734_704_1-14
 #Mo_B16_741_700_1-14
 #Mo_B16_712_706_1-14.h5
+#MO_B16_781_761_1-14WOH
 model = models.Sequential()
 model.add(layers.LSTM(128, stateful=True, return_sequences=True))
 model.add(layers.LSTM(128, stateful=True, return_sequences=True))
