@@ -18,15 +18,20 @@ class real_time_reading:
     # batch_size = 8
     batch_size = 16
 
+    type = {0: 'reg', 1: 'pet', 2: 'pok', 3: 'com', 4: 'scr'}
+    labels = []
+
     model = load_model('MO_B16_781_761_1-14WOH.h5')
 
-    # TSP = TSPDecoder(port="COM10", rows=dim_row, columns=dim_col)  # Femke's working line
-    TSP = TSPDecoder(rows=dim_row, columns=dim_col)  # Maja's working line
-    def the_lot_of_readings(self):
+    TSP = TSPDecoder(port="COM10", rows=dim_row, columns=dim_col)  # Femke's working line
+    #TSP = TSPDecoder(rows=dim_row, columns=dim_col)  # Maja's working line
+
+
+    def do_one_reading(self):
 
         ###def __init__(self)
 
-        while self.TSP.available():
+        if self.TSP.available():
             frames = np.array([self.TSP.readFrame() for i in range(self.batch_size)])
 
             #thresholding
@@ -37,31 +42,37 @@ class real_time_reading:
             #for label in predicted_labels:
                 #print(label)
 
+            self.labels.append(self.type[predicted_labels[1]])
+            #print(self.labels)
             #key_from_wait_key = cv2.waitKey(1)
             #key = AsciiDecoder(key_from_wait_key)
-            key = AsciiDecoder(cv2.waitKey())
+            ###key = AsciiDecoder(cv2.waitKey())
+            #print(len(self.labels))
 
-            if key == 'q':
-                exit()
-            print(predicted_labels[1])
-            return(predicted_labels[1])
+            ###if key == 'q':
+            ###    exit()
+            #print(predicted_labels[1])
+            #return(predicted_labels[1])
 
-    def get_the_smooth_state(self):
-        data = []
-        type = {0: 'reg', 1: 'pet', 2: 'pok', 3: 'com', 4: 'scr'}
-        amount_type = {'reg': 0, 'pet': 0, 'pok': 0, 'com': 0, 'scr': 0}
-        for i in range(20):
-            #print(self.the_lot_of_readings().dtype)
-            data.append(type[self.the_lot_of_readings()])
-        np.array(data)
-        for d in data:
-            for key in amount_type:
-                if d == key:
-                    amount_type[key] += 1
-        maximum = max(zip(amount_type.values(), amount_type.keys()))[1]
-        print(amount_type)
-        return(maximum)
+    def get_the_smooth_state(self, previous_state):
+        #print(len(self.labels))
+        if len(self.labels) <= 20:
+            print("ph chippies")
+            return previous_state
+        else:
+            amount_type = {'reg': 0, 'pet': 0, 'pok': 0, 'com': 0, 'scr': 0}
+            #print("i give a new state")
+            #np.array(self.labels)
+            print(self.labels)
+            for d in self.labels:
+                for key in amount_type:
+                    if d == key:
+                        amount_type[key] += 1
+            maximum = max(zip(amount_type.values(), amount_type.keys()))[1]
+            self.labels = []
+            print(maximum)
+            return maximum
 
 
-read = real_time_reading()
-print(read.get_the_smooth_state())
+#read = real_time_reading()
+#print(read.get_the_smooth_state())
