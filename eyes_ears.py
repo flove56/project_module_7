@@ -10,8 +10,16 @@ class Eyes_ears:
 
         self.angle_ears = 15
         self.ears_pos_indication = None
-        self.ears_wanted_scalers = [0.8, 2.1, 0.1, 2.11]
+
+        self.ears_wanted_scalers_reg = [0.8, 2.1, 0.1, 2.11]
+        self.ears_wanted_scalers_low = [1.1, 2, 0.28, 2]
+        self.ears_wanted_scalers_high = [0.7, 2.12, 0.02, 2.13]
+
+        self.ears_wanted_scalers = self.ears_wanted_scalers_reg
         self.ears_scalers_now = [0.8, 2.1, 0.1, 2.11]
+        self.scalers_for_the_changes = []
+        for position in range (len(self.ears_wanted_scalers)):
+            self.scalers_for_the_changes.append((abs(self.ears_wanted_scalers_high[position]-self.ears_wanted_scalers_low[position]))/50)
         self.change_state = False
 
         # define colors
@@ -178,19 +186,19 @@ class Eyes_ears:
             if self.ears_pos_indication is not ears_stages['position']:
                 self.ears_pos_indication = ears_stages['position']
                 if self.ears_pos_indication == 'reg':
-                    self.ears_wanted_scalers = [0.8, 2.1, 0.1, 2.11]
+                    self.ears_wanted_scalers = self.ears_wanted_scalers_reg
                 if self.ears_pos_indication == 'low':
-                    self.ears_wanted_scalers = [1.1, 2, 0.28, 2]
+                    self.ears_wanted_scalers = self.ears_wanted_scalers_low
                 if self.ears_pos_indication == 'high':
-                    self.ears_wanted_scalers = [0.7, 2.12, 0.05, 2.13]
+                    self.ears_wanted_scalers = self.ears_wanted_scalers_high
 
         if self.change_state is True:
             print(self.angle_ears, ears_stages['angle'])
             for scaler in range(len(self.ears_wanted_scalers)):
                 if self.ears_scalers_now[scaler] > self.ears_wanted_scalers[scaler]:
-                    self.ears_scalers_now[scaler] -= 0.01
+                    self.ears_scalers_now[scaler] -= self.scalers_for_the_changes[scaler]
                 if self.ears_scalers_now[scaler] < self.ears_wanted_scalers[scaler]:
-                    self.ears_scalers_now[scaler] += 0.01
+                    self.ears_scalers_now[scaler] += self.scalers_for_the_changes[scaler]
             if self.angle_ears > ears_stages['angle']:
                 self.angle_ears -= 0.5
             if self.angle_ears < ears_stages['angle']:

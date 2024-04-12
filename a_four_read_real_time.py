@@ -39,30 +39,15 @@ class real_time_reading:
 
             predictions = self.model.predict(frames)
             predicted_labels = np.argmax(predictions, axis = 1)
-            #for label in predicted_labels:
-                #print(label)
 
             self.labels.append(self.type[predicted_labels[1]])
-            #print(self.labels)
-            #key_from_wait_key = cv2.waitKey(1)
-            #key = AsciiDecoder(key_from_wait_key)
-            ###key = AsciiDecoder(cv2.waitKey())
-            #print(len(self.labels))
 
-            ###if key == 'q':
-            ###    exit()
-            #print(predicted_labels[1])
-            #return(predicted_labels[1])
 
     def get_the_smooth_state(self, previous_state):
-        #print(len(self.labels))
         if len(self.labels) <= 20:
             return previous_state
         else:
             amount_type = {'reg': 0, 'pet': 0, 'pok': 0, 'com': 0, 'scr': 0}
-            #print("i give a new state")
-            #np.array(self.labels)
-            print(self.labels)
             for d in self.labels:
                 for key in amount_type:
                     if d == key:

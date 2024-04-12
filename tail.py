@@ -100,9 +100,14 @@ class Tail:
         self.max_scale = 0.5
         self.end_indication = None
 
-        self.wanted_scalers = [1.8, 0.4, 1.0, 0.9]
-        self.scalers_now = [1.6, -0.4, 0.8, 0.8]  # end_x, end_y, left_x, right_x
+        self.wanted_scalers_low = [1.6, -0.4, 0.8, 0.8] # end_x, end_y, left_x, right_x
+        self.wanted_scalers_high = [1.8, 0.4, 1.0, 0.9] # end_x, end_y, left_x, right_x
 
+        self.wanted_scalers = self.wanted_scalers_high
+        self.scalers_now = [1.6, -0.4, 0.8, 0.8]  # end_x, end_y, left_x, right_x
+        self.scalers_for_the_changes = []
+        for position in range (len(self.wanted_scalers)):
+            self.scalers_for_the_changes.append(abs((self.wanted_scalers_high[position]-self.wanted_scalers_low[position]))/50)
         self.amount_of_hair = 20
 
     def display_tail(self, screen_):
@@ -154,9 +159,9 @@ class Tail:
             self.end_indication = tail_stages['end_point']
 
             if self.end_indication == 'low':
-                self.wanted_scalers = [1.6, -0.4, 0.8, 0.8]
+                self.wanted_scalers = self.wanted_scalers_low
             if self.end_indication == 'high':
-                self.wanted_scalers = [1.8, 0.4, 1.0, 0.9]
+                self.wanted_scalers = self.wanted_scalers_high
 
         if self.change_state:
             if self.tail_scale >= self.max_scale:
@@ -166,9 +171,9 @@ class Tail:
             self.tail_scale += self.tail_speed
             for scaler in range(len(self.wanted_scalers)):
                 if self.scalers_now[scaler] > self.wanted_scalers[scaler]:
-                    self.scalers_now[scaler] -= 0.01
+                    self.scalers_now[scaler] -= self.scalers_for_the_changes[scaler]
                 if self.scalers_now[scaler] < self.wanted_scalers[scaler]:
-                    self.scalers_now[scaler] += 0.01
+                    self.scalers_now[scaler] += self.scalers_for_the_changes[scaler]
             if (self.max_scale >= self.tail_scale >= -self.max_scale and
                     self.wanted_scalers[1] - 0.02 >= self.scalers_now[1] >= self.wanted_scalers[1] + 0.02):
                 self.change_state = False

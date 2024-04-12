@@ -30,7 +30,6 @@ class The_pet:
             #self.test_key()
 
             self.read_state.do_one_reading()
-            #print(self.read_state.get_the_smooth_state(self.state))
             self.state = self.read_state.get_the_smooth_state(self.state)
             self.display()
 
