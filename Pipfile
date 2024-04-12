@@ -11,6 +11,8 @@ matplotlib = "*"
 tensorflow = "*"
 seaborn = "*"
 pygame = "*"
+playsound = "*"
+pydub = "*"
 
 [dev-packages]
 

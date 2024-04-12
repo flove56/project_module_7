@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "d2bc72997f5e9dff9c2791b1b739590cd7ac28fc4ec52da87ebd65fcfc16d4d8"
+            "sha256": "865601b994f398c93853a9ed89dff2fcf8f24482f71079f6df770c1719208b0b"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -867,6 +867,13 @@
             "markers": "python_version >= '3.8'",
             "version": "==10.3.0"
         },
+        "playsound": {
+            "hashes": [
+                "sha256:cc6ed11d773034b0ef624e6bb4bf50f4b76b8414a59ce6d38afb89b423297ced"
+            ],
+            "index": "pypi",
+            "version": "==1.3.0"
+        },
         "protobuf": {
             "hashes": [
                 "sha256:19b270aeaa0099f16d3ca02628546b8baefe2955bbe23224aaf856134eccf1e4",
@@ -883,6 +890,14 @@
             ],
             "markers": "python_version >= '3.8'",
             "version": "==4.25.3"
+        },
+        "pydub": {
+            "hashes": [
+                "sha256:65617e33033874b59d87db603aa1ed450633288aefead953b30bded59cb599a6",
+                "sha256:980a33ce9949cab2a569606b65674d748ecbca4f0796887fd6f46173a7b0d30f"
+            ],
+            "index": "pypi",
+            "version": "==0.25.1"
         },
         "pygame": {
             "hashes": [

@@ -1,7 +1,8 @@
 from body import Body
 import pygame
 import stages_pet
-from a_four_read_real_time import real_time_reading
+#from a_four_read_real_time import real_time_reading
+from sounds import Sounds
 
 
 class The_pet:
@@ -11,8 +12,9 @@ class The_pet:
         pygame.init()
         self.screen = pygame.display.set_mode(self.size)
         self.body = Body(self.size)
+        self.sound = Sounds()
 
-        self.read_state = real_time_reading()
+        #self.read_state = real_time_reading()
         self.last_state = 'reg'
 
 
@@ -27,22 +29,24 @@ class The_pet:
                     pygame.quit()
 
             # Call all functions
-            #self.test_key()
+            self.test_key()
 
-            self.read_state.do_one_reading()
-            self.state = self.read_state.get_the_smooth_state(self.state)
-            self.display()
+            #self.read_state.do_one_reading()
+            #self.state = self.read_state.get_the_smooth_state(self.state)
+            self.render()
 
             # Update the entire canvas
             pygame.display.flip()
             # Limit the frame rate
             clock.tick(60)
 
-    def display(self):
+    def render(self):
         self.screen.fill((175, 203, 173))
-        self.body.update(stages_pet.stage(self.state, self.last_state))
+        move_list = stages_pet.stage(self.state, self.last_state)
+        self.body.update(move_list)
         self.last_state = self.state
         self.body.display_all(self.screen)
+        self.sound.play_sound(move_list[4], self.state)
 
     def test_key(self):
         key = pygame.key.get_pressed()
