@@ -1,7 +1,7 @@
 from body import Body
 import pygame
 import stages_pet
-from a_four_read_real_time import real_time_reading
+# from a_four_read_real_time import real_time_reading
 
 
 class The_pet:
@@ -12,7 +12,7 @@ class The_pet:
         self.screen = pygame.display.set_mode(self.size)
 
         self.body = Body(self.size)
-        self.read_state = real_time_reading()
+        #self.read_state = real_time_reading()
         self.last_state = 'reg'
 
 
@@ -29,7 +29,7 @@ class The_pet:
             # Call all functions
             self.test_key()
             # per 10 of 20 frames pas kijken misschien? of twee python dingen
-            self.state = self.read_state.get_the_smooth_state()
+            #self.state = self.read_state.get_the_smooth_state()
             self.display()
 
             # Update the entire canvas
@@ -45,7 +45,7 @@ class The_pet:
         self.body.display_all(self.screen)
 
     def test_key(self):
-        """key = pygame.key.get_pressed()
+        key = pygame.key.get_pressed()
         if key[pygame.K_0]:
             self.state = 'reg'
         if key[pygame.K_1]:
@@ -55,4 +55,4 @@ class The_pet:
         if key[pygame.K_3]:
             self.state = 'com'
         if key[pygame.K_4]:
-            self.state = 'scr'"""
+            self.state = 'scr'
