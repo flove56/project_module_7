@@ -29,8 +29,6 @@ class real_time_reading:
 
     def do_one_reading(self):
 
-        ###def __init__(self)
-
         if self.TSP.available():
             frames = np.array([self.TSP.readFrame() for i in range(self.batch_size)])
 
@@ -55,7 +53,3 @@ class real_time_reading:
             maximum = max(zip(amount_type.values(), amount_type.keys()))[1]
             self.labels = []
             return maximum
-
-
-#read = real_time_reading()
-#print(read.get_the_smooth_state())
