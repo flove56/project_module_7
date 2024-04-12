@@ -57,6 +57,8 @@ def stage(phase, last_phase):
 
     # The variables are changed if they are different then the default
     if phase == 'pet':
+        ears_angle = ears_low
+        ears_pos = ears_pos_high
         tail_speed = tail_speed_fast
         tail_max_scale = tail_max_scale_big
     if phase == 'scr':
