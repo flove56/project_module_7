@@ -8,6 +8,12 @@ class Eyes_ears:
         self.drawing_x = drawing_x_
         self.drawing_y = drawing_y_
 
+        self.angle_ears = 15
+        self.ears_pos_indication = None
+        self.ears_wanted_scalers = [0.8, 2.1, 0.1, 2.11]
+        self.ears_scalers_now = [0.8, 2.1, 0.1, 2.11]
+        self.change_state = False
+
         # define colors
         self.eye_color = (237, 237, 0)  # (212, 235, 242)  # Light blue # dark yellow (237, 237, 0)
         # light yellow (255, 255, 161)
@@ -27,9 +33,9 @@ class Eyes_ears:
         self.display_eyes()
         self.display_ears()
 
-    def update(self, ears_stages_, eyes_stages_):
+    def update(self, ears_stages_, eyes_stages_, change_state):
         self.update_eyes(eyes_stages_)
-        self.update_ears(ears_stages_)
+        self.update_ears(ears_stages_, change_state)
 
     def display_eyes(self):
         if self.eyes_open_bool is True:
@@ -155,30 +161,43 @@ class Eyes_ears:
                                 self.drawing_y / (self.eyes_scale * 2.2))
 
     def display_ears(self):
+        position_left = (self.x / 2 - self.drawing_x * self.ears_scalers_now[0],
+                         self.y / 2 - self.drawing_y * self.ears_scalers_now[1])
+        position_right = (self.x / 2 + self.drawing_x * self.ears_scalers_now[2],
+                          self.y / 2 - self.drawing_y * self.ears_scalers_now[3])
+
         left_ear_rot = pygame.transform.rotate(self.left_ear, self.angle_ears)
-        self.screen.blit(left_ear_rot, self.position_left)
+        self.screen.blit(left_ear_rot, position_left)
 
         right_ear_rot = pygame.transform.rotate(self.right_ear, int(360 - self.angle_ears - 1))
-        self.screen.blit(right_ear_rot, self.position_right)
+        self.screen.blit(right_ear_rot, position_right)
 
-    def update_ears(self, ears_stages):
-        self.angle_ears = ears_stages['angle']
-        ears_pos_indication = ears_stages['position']
+    def update_ears(self, ears_stages, change_state_):
+        if change_state_:
+            self.change_state = change_state_
+            if self.ears_pos_indication is not ears_stages['position']:
+                self.ears_pos_indication = ears_stages['position']
+                if self.ears_pos_indication == 'reg':
+                    self.ears_wanted_scalers = [0.8, 2.1, 0.1, 2.11]
+                if self.ears_pos_indication == 'low':
+                    self.ears_wanted_scalers = [1.1, 2, 0.28, 2]
+                if self.ears_pos_indication == 'high':
+                    self.ears_wanted_scalers = [0.7, 2.12, 0.05, 2.13]
 
-        if ears_pos_indication == 'reg':
-            self.position_left = (self.x / 2 - self.drawing_x * 0.8,
-                                  self.y / 2 - self.drawing_y * 2.1)
-            self.position_right = (self.x / 2 + self.drawing_x * 0.1,
-                                   self.y / 2 - self.drawing_y * 2.11)
+        if self.change_state is True:
+            print(self.angle_ears, ears_stages['angle'])
+            for scaler in range(len(self.ears_wanted_scalers)):
+                if self.ears_scalers_now[scaler] > self.ears_wanted_scalers[scaler]:
+                    self.ears_scalers_now[scaler] -= 0.01
+                if self.ears_scalers_now[scaler] < self.ears_wanted_scalers[scaler]:
+                    self.ears_scalers_now[scaler] += 0.01
+            if self.angle_ears > ears_stages['angle']:
+                self.angle_ears -= 0.5
+            if self.angle_ears < ears_stages['angle']:
+                self.angle_ears += 0.5
+            if (self.ears_wanted_scalers[2] - 0.005 >= self.ears_scalers_now[2] >=
+                    self.ears_wanted_scalers[2] + 0.005 and
+                    ears_stages['angle'] - 0.05 >= self.angle_ears >=
+                    ears_stages['angle'] + 0.05):
+                self.change_state = False
 
-        if ears_pos_indication == 'low':
-            self.position_left = (self.x / 2 - self.drawing_x * 1.1,
-                                  self.y / 2 - self.drawing_y * 2)
-            self.position_right = (self.x / 2 + self.drawing_x * 0.28,
-                                   self.y / 2 - self.drawing_y * 2)
-
-        if ears_pos_indication == 'high':
-            self.position_left = (self.x / 2 - self.picture_size[0] - self.drawing_x * 0.05,
-                                  self.y / 2 - self.drawing_y * 2.12)
-            self.position_right = (self.x / 2 + self.drawing_x * 0.05,
-                                   self.y / 2 - self.drawing_y * 2.13)

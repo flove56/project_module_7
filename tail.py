@@ -94,10 +94,10 @@ class Tail:
 
         self.tail_scale = 0.2
         self.tail_speed = 0.01
-        self.tail_width = 1
+        self.tail_width = 3
         self.tail_end_movement = 0.3
         self.change_state = False
-        self.max_scale = 0
+        self.max_scale = 0.5
         self.end_indication = None
 
         self.wanted_scalers = [1.8, 0.4, 1.0, 0.9]
@@ -149,10 +149,14 @@ class Tail:
             self.old_max_scale = self.max_scale
             self.tail_speed = tail_stages['speed']
             self.change_state = change_state_
-        self.max_scale = tail_stages['max_scale']
+            self.max_scale = tail_stages['max_scale']
+            self.tail_width = tail_stages['width']
+            self.end_indication = tail_stages['end_point']
 
-        self.tail_width = tail_stages['width']
-        self.end_indication = tail_stages['end_point']
+            if self.end_indication == 'low':
+                self.wanted_scalers = [1.6, -0.4, 0.8, 0.8]
+            if self.end_indication == 'high':
+                self.wanted_scalers = [1.8, 0.4, 1.0, 0.9]
 
         if self.change_state:
             if self.tail_scale >= self.max_scale:
@@ -160,7 +164,13 @@ class Tail:
             if self.tail_scale <= -self.max_scale:
                 self.tail_speed = tail_stages['speed']
             self.tail_scale += self.tail_speed
-            if self.tail_scale <= self.max_scale and self.tail_scale >= -self.max_scale:
+            for scaler in range(len(self.wanted_scalers)):
+                if self.scalers_now[scaler] > self.wanted_scalers[scaler]:
+                    self.scalers_now[scaler] -= 0.01
+                if self.scalers_now[scaler] < self.wanted_scalers[scaler]:
+                    self.scalers_now[scaler] += 0.01
+            if (self.max_scale >= self.tail_scale >= -self.max_scale and
+                    self.wanted_scalers[1] - 0.02 >= self.scalers_now[1] >= self.wanted_scalers[1] + 0.02):
                 self.change_state = False
         else:
             if self.tail_scale >= self.max_scale:
@@ -168,15 +178,3 @@ class Tail:
             if self.tail_scale <= -self.max_scale:
                 self.tail_speed = -self.tail_speed
             self.tail_scale += self.tail_speed
-
-        if self.end_indication == 'low':
-            self.wanted_scalers = [1.6, -0.4, 0.8, 0.8]
-        if self.end_indication == 'high':
-            self.wanted_scalers = [1.8, 0.4, 1.0, 0.9]
-
-        for scaler in range(len(self.wanted_scalers)):
-            if self.scalers_now[scaler] > self.wanted_scalers[scaler]:
-                self.scalers_now[scaler] -= 0.01
-            if self.scalers_now[scaler] < self.wanted_scalers[scaler]:
-                self.scalers_now[scaler] += 0.01
-

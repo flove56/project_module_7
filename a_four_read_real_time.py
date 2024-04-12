@@ -57,7 +57,6 @@ class real_time_reading:
     def get_the_smooth_state(self, previous_state):
         #print(len(self.labels))
         if len(self.labels) <= 20:
-            print("ph chippies")
             return previous_state
         else:
             amount_type = {'reg': 0, 'pet': 0, 'pok': 0, 'com': 0, 'scr': 0}
@@ -70,7 +69,6 @@ class real_time_reading:
                         amount_type[key] += 1
             maximum = max(zip(amount_type.values(), amount_type.keys()))[1]
             self.labels = []
-            print(maximum)
             return maximum
 
 

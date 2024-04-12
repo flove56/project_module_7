@@ -32,7 +32,6 @@ class The_pet:
             self.read_state.do_one_reading()
             #print(self.read_state.get_the_smooth_state(self.state))
             self.state = self.read_state.get_the_smooth_state(self.state)
-            print("now before", self.state)
             self.display()
 
             # Update the entire canvas
@@ -42,11 +41,8 @@ class The_pet:
 
     def display(self):
         self.screen.fill((175, 203, 173))
-        print("Last", self.last_state)
-        print("now", self.state)
         self.body.update(stages_pet.stage(self.state, self.last_state))
         self.last_state = self.state
-        print("nu Last", self.last_state)
         self.body.display_all(self.screen)
 
     def test_key(self):
