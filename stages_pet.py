@@ -14,8 +14,8 @@ eyes_small = 3
 # Set the parameters for the different tail movements
 tail_width_normal = 3
 tail_width_sad = 5
-tail_speed_slow = 0.01
-tail_speed_fast = 0.045
+tail_speed_slow = 0.02
+tail_speed_fast = 0.06
 tail_speed_not = 0
 tail_max_scale_reg = 0.5
 tail_max_scale_big = 0.8
