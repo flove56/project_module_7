@@ -30,9 +30,7 @@ print(y_data)
 X_train, X_test, y_train, y_test = train_test_split(X_data, y_data, test_size=0.25)
 X_train, X_val, y_train, y_val = train_test_split(X_train, y_train, test_size=0.2)
 
-#batch_size = 8
 batch_size = 16
-#batch_size = 32
 
 
 def drop_remain(X,y):
@@ -97,7 +95,6 @@ plt.ylabel('Accuracy')
 plt.ylim([0.5, 1])
 plt.legend(loc='lower right')
 plt.show()
-#model.fit(X_train, y_train, epochs=iters, validation_split=0.2)
 
 #save the model
 model.save('MO_without_hitting.h5')
@@ -118,7 +115,5 @@ plt.ylabel("True")
 plt.title('Confusion Matrix for Decision Tree')
 plt.show()
 
-"""test_loss, test_acc = model.evaluate(X_test, y_test, verbose=2)
-print(f"Test loss: {test_loss} Test accuracy: {test_acc}")"""
 
 

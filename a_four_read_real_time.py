@@ -1,21 +1,11 @@
-#! /usr/bin/python3
-#! /usr/bin/python3
-import json
-import os
 from TSPDecoder import *
-import time
 import numpy as np
-import matplotlib.pyplot as plt
-from sklearn.model_selection import train_test_split
-from keras import models, layers, losses
-import cv2
 from keras.models import load_model
 
 class real_time_reading:
     dim_row = 27
     dim_col = 19
 
-    # batch_size = 8
     batch_size = 16
 
     type = {0: 'reg', 1: 'pet', 2: 'pok', 3: 'com', 4: 'scr'}
@@ -42,7 +32,7 @@ class real_time_reading:
 
 
     def get_the_smooth_state(self, previous_state):
-        if len(self.labels) <= 20:
+        if len(self.labels) < 20:
             return previous_state
         else:
             amount_type = {'reg': 0, 'pet': 0, 'pok': 0, 'com': 0, 'scr': 0}

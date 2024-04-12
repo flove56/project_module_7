@@ -4,8 +4,6 @@ from threading import Thread
 class Sounds:
     def play_sound(self, state_change, state):
         if state_change:
-            if state == 'reg':
-                thread = Thread(target=make_sound_reg)
             if state == 'pet':
                 thread = Thread(target=make_sound_pet)
             if state == 'com':
@@ -14,11 +12,8 @@ class Sounds:
                 thread = Thread(target=make_sound_pok)
             if state == 'scr':
                 thread = Thread(target=make_sound_scr)
-            thread.start()
-            print('hey')
-
-def make_sound_reg():
-    winsound.PlaySound('sounds/reg.wav', winsound.SND_FILENAME)
+            if state != 'reg':
+                thread.start()
 
 def make_sound_pet():
     winsound.PlaySound('sounds/pet.wav', winsound.SND_FILENAME)
