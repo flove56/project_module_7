@@ -1,7 +1,7 @@
 from body import Body
 import pygame
 import stages_pet
-from a_four_read_real_time import real_time_reading
+from file_d_read_real_time import real_time_reading
 from sounds import Sounds
 from background import Background
 
