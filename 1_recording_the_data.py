@@ -34,11 +34,11 @@ while True:
 
     # Read the key input
     key = AsciiDecoder(cv2.waitKey())
-    print(key)
+    #print(key)
     # Stop the program when q is pressed
     if key == 'q':
         # the json file is opened and the data is put into the file
-        with open('json_files/deletethis.json', 'w') as json_file:
+        with open('json_files/gesturesperson20.json', 'w') as json_file:
             json.dump(all_data, json_file, indent=4)
         quit()
 

@@ -17,7 +17,7 @@ dim_row = 27
 dim_col = 19
 iters = 10
 
-with open(f"json_files/gesturespersons1-14WOhitting.json", 'r') as file:
+with open(f"json_files/gesturespersons1-20WOhitting..json", 'r') as file:
     data = json.load(file)
 #the frames
 X_data = np.array([d["frame"] for d in data])
@@ -30,7 +30,7 @@ print(y_data)
 X_train, X_test, y_train, y_test = train_test_split(X_data, y_data, test_size=0.25)
 X_train, X_val, y_train, y_val = train_test_split(X_train, y_train, test_size=0.2)
 
-batch_size = 16
+batch_size = 64
 
 
 def drop_remain(X,y):
@@ -54,6 +54,8 @@ model.add(layers.LSTM(128, stateful=True, return_sequences=True))
 model.add(layers.LSTM(128, stateful=True, return_sequences=True))
 model.add(layers.LSTM(128, stateful=True))
 model.add(layers.Dense(5))
+#model.add(layers.Dense(6))
+
 
 '''model = models.Sequential()
 model.add(layers.LSTM(64, stateful=True, return_sequences=True))
@@ -97,7 +99,7 @@ plt.legend(loc='lower right')
 plt.show()
 
 #save the model
-model.save('MO_without_hitting.h5')
+model.save('MO_with_hitting.h5')
 
 test_loss, test_acc = model.evaluate(X_test,  y_test, verbose=2, batch_size=batch_size)
 print(test_loss, test_acc)
