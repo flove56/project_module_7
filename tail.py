@@ -1,3 +1,7 @@
+import random
+
+import pygame
+
 """
 bezier.py - Calculates a bezier curve from control points. 
 https://www.pygame.org/wiki/BezierCurve
@@ -5,10 +9,8 @@ https://www.pygame.org/wiki/BezierCurve
 2007 Victor Blomqvist
 Released to the Public Domain
 """
-import random
 
-import pygame
-
+# Initialize the colors
 gray = (100, 100, 100)
 lightgray = (200, 200, 200)
 red = (255, 0, 0)
@@ -80,18 +82,23 @@ def compute_bezier_points(vertices):
     return result
 
 
+""" Our own code starts here """
+
+
 class Tail:
     def __init__(self, start_point_, x_, y_, drawing_x_, drawing_y_):
+        # The point of the tail that is attached to the animal is set
         self.start_point = start_point_
+        # Initialize drawing parameters
         self.x = x_
         self.y = y_
         self.drawing_x = drawing_x_
         self.drawing_y = drawing_y_
 
+        # Initialize variables
         self.end_point = None
         self.left_mid_point = None
         self.right_mid_point = None
-
         self.tail_scale = 0.2
         self.tail_speed = 0.01
         self.tail_width = 3
@@ -99,25 +106,31 @@ class Tail:
         self.change_state = False
         self.max_scale = 0.5
         self.end_indication = None
-
-        self.wanted_scalers_low = [1.6, -0.4, 0.8, 0.8] # end_x, end_y, left_x, right_x
-        self.wanted_scalers_high = [1.8, 0.4, 1.0, 0.9] # end_x, end_y, left_x, right_x
-
-        self.wanted_scalers = self.wanted_scalers_high
-        self.scalers_now = [1.6, -0.4, 0.8, 0.8]  # end_x, end_y, left_x, right_x
-        self.scalers_for_the_changes = []
-        for position in range (len(self.wanted_scalers)):
-            self.scalers_for_the_changes.append(abs((self.wanted_scalers_high[position]-self.wanted_scalers_low[position]))/50)
         self.amount_of_hair = 20
+
+        # Set the scalers for the end point of the tail for the different positions
+        self.wanted_scalers_low = [1.6, -0.4, 0.8, 0.8]  # end_x, end_y, left_x, right_x
+        self.wanted_scalers_high = [1.8, 0.4, 1.0, 0.9]  # end_x, end_y, left_x, right_x
+        # Initialize the scalers for the start
+        self.wanted_scalers = self.wanted_scalers_high
+        self.scalers_now = [1.6, -0.4, 0.8, 0.8]
+        # Calculate the proportions for the animations
+        self.scalers_for_the_changes = []
+        for position in range(len(self.wanted_scalers)):
+            self.scalers_for_the_changes.append(
+                abs((self.wanted_scalers_high[position] - self.wanted_scalers_low[position])) / 50)
 
     def display_tail(self, screen_):
         self.screen = screen_
 
+        # Set the position of the end point of the tail
         self.end_point = (self.x / 2 + self.drawing_x * self.scalers_now[0],
                           self.y / 2 - self.drawing_y * self.scalers_now[1] -
                           self.drawing_y * self.tail_end_movement * self.tail_scale)
+        # Set the position of the left middle point of the tail to create a Bézier curve
         self.left_mid_point = [self.x / 2 + self.drawing_x * self.scalers_now[2],
                                self.y / 2 + self.drawing_y * 0.4 + self.drawing_y * self.tail_scale]
+        # Set the position of the right middle point of the tail to crate a Bézier curve
         self.right_mid_point = [self.x / 2 + self.drawing_x * self.scalers_now[3],
                                 self.y / 2 + self.drawing_y * 0 - self.drawing_y * self.tail_scale]
 
@@ -125,6 +138,7 @@ class Tail:
         control_points = [self.start_point, self.left_mid_point, self.right_mid_point, self.end_point]
 
         """
+        # This is used to see the control points and create lines between these points
         # Draw control points
         for p in control_points:
             pygame.draw.circle(self.screen, blue, (int(p[0]), int(p[1])), 4)
@@ -132,25 +146,34 @@ class Tail:
         # Draw control "lines"
         pygame.draw.lines(self.screen, lightgray, False, [(x[0], x[1]) for x in control_points])
         """
+
         fur_color = [248, 200, 135]  # Light brown
         leg_color = [50, 10, 0]  # Dark Brown
+
+        # Calculate the steps for the gradient in the tail
         steps = [(fur_color[0] - leg_color[0]) / (self.amount_of_hair + 1),
                  (fur_color[1] - leg_color[1]) / (self.amount_of_hair + 1),
                  (fur_color[2] - leg_color[2]) / (self.amount_of_hair + 1)]
+
+        # Create hair strains
         for i in range(0, self.amount_of_hair):
-            # Draw bezier curve
-            for l in range(1, 3):
-                for m in range(1, 2):
-                    control_points[l][m] += self.drawing_y * 0.015 * l
+            # Draw Bézier curve for each hair strain
+            for x in range(1, 3):
+                for y in range(1, 2):
+                    control_points[x][y] += self.drawing_y * 0.015 * x
+            # Each point of the control points is set into b_points
             b_points = compute_bezier_points([(x[0], x[1]) for x in control_points])
-            # creating a gradiant in color between the strands of hair
+            # Creating a gradiant in color between the strands of hair
             r = fur_color[0] - int(steps[0] * i)
             g = fur_color[1] - int(steps[1] * i)
             b = fur_color[2] - int(steps[2] * i)
+            # Draw a line for each strain
             pygame.draw.lines(self.screen, (r, g, b), False, b_points, self.tail_width)
 
     def update_tail(self, tail_stages, change_state_):
-        if change_state_:
+        # When there is a different state move the tail points to the correct positions
+        if change_state_:  # This happens once
+            # Set variables for the changing state
             self.old_max_scale = self.max_scale
             self.tail_speed = tail_stages['speed']
             self.change_state = change_state_
@@ -158,26 +181,33 @@ class Tail:
             self.tail_width = tail_stages['width']
             self.end_indication = tail_stages['end_point']
 
+            # Change the wanted scalers to the scalers corresponding of the position
             if self.end_indication == 'low':
                 self.wanted_scalers = self.wanted_scalers_low
             if self.end_indication == 'high':
                 self.wanted_scalers = self.wanted_scalers_high
 
-        if self.change_state:
+        # Is the change state of the class is true
+        if self.change_state:  # this happens multiple times
+            # Adjust the speed to the state
             if self.tail_scale >= self.max_scale:
                 self.tail_speed = -tail_stages['speed']
             if self.tail_scale <= -self.max_scale:
                 self.tail_speed = tail_stages['speed']
             self.tail_scale += self.tail_speed
+
+            # Adjust each scaler with its own proportions
             for scaler in range(len(self.wanted_scalers)):
                 if self.scalers_now[scaler] > self.wanted_scalers[scaler]:
                     self.scalers_now[scaler] -= self.scalers_for_the_changes[scaler]
                 if self.scalers_now[scaler] < self.wanted_scalers[scaler]:
                     self.scalers_now[scaler] += self.scalers_for_the_changes[scaler]
+            # Change the change_state of the class when the ears are in the correct position
             if (self.max_scale >= self.tail_scale >= -self.max_scale and
                     self.wanted_scalers[1] - 0.02 >= self.scalers_now[1] >= self.wanted_scalers[1] + 0.02):
                 self.change_state = False
         else:
+            # Move the tail
             if self.tail_scale >= self.max_scale:
                 self.tail_speed = -self.tail_speed
             if self.tail_scale <= -self.max_scale:

@@ -8,15 +8,21 @@ from background import Background
 
 class The_pet:
     def __init__(self):
-        self.state = 'reg'
+        # Set the screen size
         self.size = (800, 800)
+
+        # Set up pygame and a screen
         pygame.init()
         self.screen = pygame.display.set_mode(self.size)
+
+        # Initialize classes
         self.background = Background(self.size)
         self.body = Body(self.size)
         self.sound = Sounds()
-
         self.read_state = real_time_reading()
+
+        # Set the initial state to regular
+        self.state = 'reg'
         self.last_state = 'reg'
 
 
@@ -30,11 +36,12 @@ class The_pet:
                 if event.type == pygame.QUIT:
                     pygame.quit()
 
-            # Call all functions
-            #self.test_key()
-
+            # Read the state and gather gestures
+            #self.test_key()  # Use keys as input for states
+            # Use the touch patch as input for the states:
             self.read_state.do_one_reading()
             self.state = self.read_state.get_the_smooth_state(self.state)
+
             self.render()
 
             # Update the entire canvas
@@ -43,14 +50,21 @@ class The_pet:
             clock.tick(60)
 
     def render(self):
+        # Set the background
         self.background.display(self.screen)
+        # Set the variables of the pet according to the correct state
         move_list = stages_pet.stage(self.state, self.last_state)
-        self.body.update(move_list)
+        # Update the body to the correct state
+        self.body.update_all(move_list)
+        # Set the last state to the current state
         self.last_state = self.state
+        # Display the animal
         self.body.display_all(self.screen)
-        self.sound.play_sound(move_list[4], self.state)
+        # Play the correct sound for the state
+        self.sound.play_sound(move_list[3], self.state)
 
     def test_key(self):
+        # Use keys as input for the different state
         key = pygame.key.get_pressed()
         if key[pygame.K_0]:
             self.state = 'reg'
