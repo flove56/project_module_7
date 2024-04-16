@@ -1,5 +1,5 @@
 from sklearn.metrics import confusion_matrix
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split, GridSearchCV ###
 import numpy as np
 import matplotlib.pyplot as plt
 import json
@@ -12,7 +12,7 @@ dim_col = 19
 iters = 10
 
 # Open the file that is used to train and test the model
-with open(f"json_files/gesturespersons1-20WOhitting_pokeEmptiesRemoved..json", 'r') as file:
+with open(f"json_files/gesturesperson1withouthitting.json", 'r') as file:
     data = json.load(file)
 
 # Save the frame data to the X_data
@@ -52,27 +52,32 @@ X_val, y_val = drop_remain(X_val, y_val)
 #Mo_B16_741_700_1-14
 #Mo_B16_712_706_1-14.h5
 #MO_B16_781_761_1-14WOH  <--------------------------------------------
+#MO_B16_871_855_1-20WOHpoker
 
 # Create the LSTM model with 3 hidden layers
-model = models.Sequential()
+"""model = models.Sequential()
 model.add(layers.LSTM(128, stateful=True, return_sequences=True))
 model.add(layers.LSTM(128, stateful=True, return_sequences=True))
 model.add(layers.LSTM(128, stateful=True))
-model.add(layers.Dense(5))
+model.add(layers.Dense(len(dict_key)))"""
 
-
+model = models.Sequential()
+model.add(layers.LSTM(128, stateful=True, return_sequences=True))
+model.add(layers.LSTM(128, stateful=True, return_sequences=True, go_backwards= True))
+model.add(layers.LSTM(128, stateful=True))
+model.add(layers.Dense(len(dict_key)))
 
 '''model = models.Sequential()
 model.add(layers.LSTM(64, stateful=True, return_sequences=True))
 model.add(layers.LSTM(64, stateful=True, return_sequences=True))
 model.add(layers.LSTM(64, stateful=True))
-model.add(layers.Dense(6))'''
+model.add(layers.Dense(len(dict_key)))'''
 
 '''model = models.Sequential()
 model.add(layers.LSTM(32, stateful=True, return_sequences=True))
 model.add(layers.LSTM(32, stateful=True, return_sequences=True))
 model.add(layers.LSTM(32, stateful=True, return_sequences=True))
-model.add(layers.Dense(6))'''
+model.add(layers.Dense(len(dict_key)))'''
 
 
 # Compile the model
@@ -108,6 +113,7 @@ plt.show()
 
 # Save the model so it can be accessed later
 model.save('MO_test.h5')
+
 
 # Calculate the loss and accuracy with the test data and print this
 test_loss, test_acc = model.evaluate(X_test,  y_test, verbose=2, batch_size=batch_size)
