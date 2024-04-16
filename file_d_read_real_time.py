@@ -17,8 +17,8 @@ class real_time_reading:
     model = load_model('MO_B16_871_855_1-20WOHpoker.h5')
 
     # Initialize the TSPDecoder
-    TSP = TSPDecoder(port="COM10", rows=dim_row, columns=dim_col)  # Femke's working line
-    #TSP = TSPDecoder(rows=dim_row, columns=dim_col)  # Maja's working line
+    #TSP = TSPDecoder(port="COM10", rows=dim_row, columns=dim_col)  # Femke's working line
+    TSP = TSPDecoder(rows=dim_row, columns=dim_col)  # Maja's working line
 
 
     # Get the data from one set of frames and store the label in the list labels
