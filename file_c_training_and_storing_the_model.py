@@ -1,17 +1,10 @@
-from sklearn.datasets import fetch_openml
-from sklearn.dummy import DummyClassifier
 from sklearn.metrics import confusion_matrix
 from sklearn.model_selection import train_test_split
-from sklearn import metrics
 import numpy as np
 import matplotlib.pyplot as plt
 import json
-import os
-import tensorflow as tf
 from keras import models, layers, losses
-import cv2
 import seaborn as sns
-from keras.models import load_model
 
 # Initialize the number of rows, columns, and iterations
 dim_row = 27
@@ -19,7 +12,7 @@ dim_col = 19
 iters = 10
 
 # Open the file that is used to train and test the model
-with open(f"json_files/gesturespersons1-20WOhitting..json", 'r') as file:
+with open(f"json_files/gesturespersons1-20WOhitting_pokeEmptiesRemoved..json", 'r') as file:
     data = json.load(file)
 
 # Save the frame data to the X_data
@@ -28,9 +21,9 @@ X_data = np.array([d["frame"] for d in data])
 dict_key = {'regular': 0, 'petting': 1, 'poking': 2, 'comforting': 3, 'scratching': 4}
 y_data = np.array([dict_key[d["label"]] for d in data])
 
-# Split all data in training and testing data
+# Split all data in training and testing data #0.25 #0.2
 X_train, X_test, y_train, y_test = train_test_split(X_data, y_data, test_size=0.25)
-# Split the training data in training and validation data
+# Split the training data in training and validation data #0.2 #0.1
 X_train, X_val, y_train, y_val = train_test_split(X_train, y_train, test_size=0.2)
 
 # Set the batch size
@@ -114,7 +107,7 @@ plt.legend(loc='lower right')
 plt.show()
 
 # Save the model so it can be accessed later
-model.save('MO_with_hitting.h5')
+model.save('MO_test.h5')
 
 # Calculate the loss and accuracy with the test data and print this
 test_loss, test_acc = model.evaluate(X_test,  y_test, verbose=2, batch_size=batch_size)
