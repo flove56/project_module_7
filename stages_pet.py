@@ -15,8 +15,6 @@ eyes_big = 3
 eyes_small = 3
 
 # Set the parameters for the different tail movements
-tail_width_normal = 3
-tail_width_sad = 5
 tail_speed_slow = 0.02
 tail_speed_fast = 0.06
 tail_max_scale_reg = 0.5
@@ -52,7 +50,6 @@ def stage(phase, last_phase):
     eyes_open = True
     eyes_awake_closed = True
     tail_speed = tail_speed_slow
-    tail_width = tail_width_normal
     tail_max_scale = tail_max_scale_reg
     tail_end = tail_end_nor
 
@@ -93,7 +90,6 @@ def stage(phase, last_phase):
     eyes_dict['closed_bool_awake'] = eyes_awake_closed
 
     tail_dict['speed'] = tail_speed
-    tail_dict['width'] = tail_width
     tail_dict['max_scale'] = tail_max_scale
     tail_dict['end_point'] = tail_end
 

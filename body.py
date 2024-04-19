@@ -96,7 +96,7 @@ class Body:
         # Draw an ellipse in the rectangle
         pygame.draw.ellipse(self.screen, self.nose_color, top_nose)
         # Create a rectangle to put the bottom of the nose into
-        bottom_nose = (self.x / 2 - (self.drawing_x / 20),
+        bottom_nose = (self.x / 2 - (self.drawing_x / 30),
                        self.y / 2 - self.drawing_y * 1.1,
                        self.drawing_x / 9,
                        self.drawing_y / 6)

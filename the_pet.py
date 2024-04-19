@@ -9,8 +9,7 @@ from background import Background
 class The_pet:
     def __init__(self):
         # Set the screen size
-        self.size = (800, 800)
-
+        self.size = (800 * 1.5, 1.5 * 800)
         # Set up pygame and a screen
         pygame.init()
         self.screen = pygame.display.set_mode(self.size)

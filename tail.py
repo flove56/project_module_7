@@ -178,7 +178,6 @@ class Tail:
             self.tail_speed = tail_stages['speed']
             self.change_state = change_state_
             self.max_scale = tail_stages['max_scale']
-            self.tail_width = tail_stages['width']
             self.end_indication = tail_stages['end_point']
 
             # Change the wanted scalers to the scalers corresponding of the position
